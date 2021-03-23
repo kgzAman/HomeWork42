@@ -10,6 +10,7 @@ public class Connection extends Thread{
     private final Socket clientSocked;
 
 
+
     public Connection(Socket clientSocked) {
         this.clientSocked = clientSocked;
     }
