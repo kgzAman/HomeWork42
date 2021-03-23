@@ -1,4 +1,6 @@
 package edu.company.Tread;
+import Client.EchoClient;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +10,7 @@ import java.util.Scanner;
 
 public class Connection extends Thread{
     private final Socket clientSocked;
+    public ArrayList<EchoClient> list=new ArrayList<>();
 
 
 
@@ -15,12 +18,10 @@ public class Connection extends Thread{
         this.clientSocked = clientSocked;
     }
 
+
     @Override
     public void run() {
-            ArrayList<Socket>serverList=new ArrayList<>();
             System.out.println("Подключен клиент:"+clientSocked);
-            serverList.add(clientSocked);
-
             try (
                     clientSocked;
                     Scanner reader = getReader(clientSocked);
@@ -65,4 +66,14 @@ public class Connection extends Thread{
         writer.write(System.lineSeparator());
         writer.flush();
     }
+
+    public static void sendToAll(String name, Socket socket, String message){
+        .stream().filter(c -> c.getSocket() != socket).forEach(c -> {
+            try {
+                PrintWriter printWriter = Action.getWriter(c.getSocket());
+                Action.sendResponse(name + ": " + message, printWriter);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 }
